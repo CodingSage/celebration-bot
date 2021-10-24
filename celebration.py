@@ -27,11 +27,11 @@ greetings = [
     "Hi"
 ]
 
-# TODO update this implementation and use a parse tree instead
-
 def celebrate(user, text):
     tagged = _get_pos_tags(text)
     (nouns, verbs, actionnouns) = _extract_nouns_verbs(tagged)
+    if tagged[0][1] == "JJ":
+        return _generate_greeting(nouns)
     return _generate_sentence(user, nouns, verbs, actionnouns)
 
 def _extract_nouns_verbs(tagged):
@@ -50,12 +50,29 @@ def _extract_nouns_verbs(tagged):
     
     return (nouns, verbs, actionnouns)
 
+# TODO update below implementations to use the parse tree instead
+
+def _generate_greeting(nouns):
+    sentence = []
+    rand_index = random.randint(0, len(greetings)-1)
+    sentence.append(greetings[rand_index])
+    sentence.append(', '.join(nouns))
+    sentence.append("!")
+    return " ".join(sentence)
+
 def _generate_sentence(user, nouns, verbs, actionnouns):
+    sentence = []
+    rand_index = random.randint(0, len(exclamations)-1)
+    sentence.append(exclamations[rand_index])
+    sentence.append("!")
+
     name = user if len(nouns) == 0 else ', '.join(nouns)
-    exclamation_index = random.randint(0, len(exclamations)-1)
-    exclaim = exclamations[exclamation_index]
+    sentence.append(name)
+
     action = "good going with " + ', '.join(verbs) + " the " + ", ".join(actionnouns)
-    return exclaim + "! " + name + " " + action + "!"
+    sentence.append(action)
+    sentence.append("!")
+    return " ".join(sentence)
 
 def _get_pos_tags(text):
     return pos_tag(word_tokenize(text))
@@ -71,3 +88,5 @@ def run_tests():
         print("\n")
         print(_get_pos_tags(test[1]))
         print("test: " + test[1] + " \ncelebration-bot: " + celebrate(test[0], test[1]))
+
+run_tests()
