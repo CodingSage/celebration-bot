@@ -1,9 +1,10 @@
+from queue import Queue
+import random
+
 import nltk
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 from nltk import pos_tag, word_tokenize, RegexpParser
-from queue import Queue
-import random
 
 chunker = RegexpParser("""
                        NP: {<DT>?<JJ>*<NN>}    
